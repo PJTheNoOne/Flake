@@ -20,7 +20,7 @@
     ghostty.url = "github:ghostty-org/ghostty";
   };
   outputs = { self, niri, nixpkgs, nixpkgs-stable, ghostty, home-manager, nix-flatpak, ... }@inputs: {
-    packages.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.hello;
+    #packages.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.hello;
     nixosConfigurations.craftingtable = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {
@@ -35,6 +35,9 @@
         inherit inputs; 
       };
       modules = [
+        {
+          nixpkgs.pkgs = specialArgs.nixpkgs;
+        }
         ./configuration.nix
         nix-flatpak.nixosModules.nix-flatpak
         ./flatpak.nix

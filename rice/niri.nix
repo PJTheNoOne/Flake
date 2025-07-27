@@ -40,5 +40,5 @@
 
   services.xserver.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  # programs.nautilus-open-any-terminal.enable = true;
+  programs.nautilus-open-any-terminal.enable = true;
 }
