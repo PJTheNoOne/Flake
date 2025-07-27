@@ -26,6 +26,11 @@
       xwayland-satellite
     ];
   };
+  
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+  };
 
   programs.hyprlock.enable = true;
 
@@ -35,5 +40,5 @@
 
   services.xserver.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  programs.nautilus-open-any-terminal.enable = true;
+  # programs.nautilus-open-any-terminal.enable = true;
 }
