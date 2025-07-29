@@ -24,6 +24,7 @@
       waybar
       xwayland
       xwayland-satellite
+      nautilus
     ];
   };
   
