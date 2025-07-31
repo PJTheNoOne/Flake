@@ -20,7 +20,7 @@
     ghostty.url = "github:ghostty-org/ghostty";
   };
   outputs = { self, niri, nixpkgs, nixpkgs-stable, ghostty, home-manager, nix-flatpak, ... }@inputs: {
-    #packages.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.hello;
+    packages.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.hello;
     nixosConfigurations.craftingtable = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {
@@ -39,6 +39,7 @@
           nixpkgs.pkgs = specialArgs.nixpkgs;
         }
         ./configuration.nix
+	./andr/android.nix
         nix-flatpak.nixosModules.nix-flatpak
         ./flatpak.nix
         ./rice/niri.nix
@@ -52,7 +53,10 @@
           home-manager.useUserPackages = true;
           home-manager.users.pj = import ./home/home.nix;
           home-manager.backupFileExtension = "bkp";
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.extraSpecialArgs = { 
+	    inherit inputs;
+	    pkgs = specialArgs.nixpkgs;
+	  };
         }
       ];
     };
