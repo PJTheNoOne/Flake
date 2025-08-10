@@ -25,6 +25,8 @@
       xwayland
       xwayland-satellite
       nautilus
+
+      wl-clipboard
     ];
   };
   

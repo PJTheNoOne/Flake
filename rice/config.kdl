@@ -379,7 +379,7 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T { spawn "ghostty"; }
     Mod+D { spawn "fuzzel"; }
-    Mod+Alt+L { spawn "hyprlock"; }
+    Mod+L cooldown-ms=500 { spawn "hyprlock"; }
     Mod+Z hotkey-overlay-title="Spawn Zen" { spawn "flatpak" "run" "app.zen_browser.zen"; }
     
 

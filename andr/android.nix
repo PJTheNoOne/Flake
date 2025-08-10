@@ -1,4 +1,4 @@
-{ pkgs, home-manager, ... }:{
+{ nixpkgs, home-manager, ... }:{
   # https://nixos.wiki/wiki/Android
   users.groups.kvm = {};
   users.groups.adbusers = {};
@@ -6,6 +6,6 @@
   programs.adb.enable = true;
 
   home-manager.users.pj = {
-    home.packages = with pkgs; [ android-studio-stable ];
+    home.packages = with nixpkgs; [ android-studio-full ];
   };
 }

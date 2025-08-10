@@ -33,9 +33,10 @@
     ffmpeg
     dav1d
 
+    unzip
+
     sdrangel
 
-    #helvum
     pavucontrol
 
     fzf #fuzzy finder
@@ -44,19 +45,11 @@
     onlyoffice-bin
     
     overskride
-    pcmanfm
 
-    #xorg.libXcursor
-    #xorg.libXi
-    #xorg.libXinerama
-    #xorg.libXScrnSaver
-    #libpng
-    #libpulseaudio
-    #libvorbis
-    #stdenv.cc.cc.lib
     libkrb5
     keyutils
     wireshark
+    net-tools
   ];
 
   programs.git = {

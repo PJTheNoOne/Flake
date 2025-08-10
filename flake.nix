@@ -30,8 +30,14 @@
         };
         nixpkgs = import nixpkgs {
           inherit system;
-          config.allowUnfree = true;
-        };
+          config = {
+	    allowUnfree = true;
+	    android_sdk.accept_license = true;
+	    permittedInsecurePackages = [
+                "libsoup-2.74.3"
+            ];
+          };
+	};
         inherit inputs; 
       };
       modules = [
