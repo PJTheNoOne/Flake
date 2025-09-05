@@ -27,9 +27,12 @@ environment {
     XDG_SESSION_TYPE "wayland";
     XDG_SESSION_DESKTOP "Niri";
     WLR_NO_HARDWARE_CURSORS "1";
-    ELECTRON_OZONE_PLATFORM_HINT "auto"
-    QT_QPA_PLATFORM "wayland;xcb"
-    STEAM_FORCE_DESKTOPUI_SCALING "1"
+    ELECTRON_OZONE_PLATFORM_HINT "auto";
+    QT_QPA_PLATFORM "wayland;xcb";
+    STEAM_FORCE_DESKTOPUI_SCALING "1";
+    GDK_SCALE "1";
+    GDK_DPI_SCALE "1";
+    _JAVA_OPTIONS "-Dsun.java2d.uiScale=1";
 }
 debug {
     render-drm-device "/dev/dri/card2"
@@ -379,7 +382,7 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T { spawn "ghostty"; }
     Mod+D { spawn "fuzzel"; }
-    Mod+L cooldown-ms=500 { spawn "hyprlock"; }
+    Mod+Alt+L cooldown-ms=500 { spawn "hyprlock"; }
     Mod+Z hotkey-overlay-title="Spawn Zen" { spawn "flatpak" "run" "app.zen_browser.zen"; }
     
 
