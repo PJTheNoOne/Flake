@@ -86,20 +86,6 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   hardware.graphics = { enable = true; };
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = true;
-    powerManagement.enable = true;
-    powerManagement.finegrained = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.latest;
-    prime = {
-      nvidiaBusId = "PCI:1:0:0";
-      amdgpuBusId = "PCI:4:0:0";
-      offload = { enable = true; enableOffloadCmd = true; };
-    };
-  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

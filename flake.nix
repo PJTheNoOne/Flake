@@ -1,15 +1,15 @@
 {
   description = "Flake";
   
-  nixConfig = {
-    extra-substituters = [
-      #"https://colmena.cachix.org"
-      "https://cache.nixos.org/"
-    ];
-    extra-trusted-public-keys = [
-      #"colmena.cachix.org-1:7BzpDnjjH8ki2CT3f6GdOk7QAzPOl+1t3LvTLXqYcSg="
-    ];
-  };
+# nixConfig = {
+#    extra-substituters = [
+#      #"https://colmena.cachix.org"
+#      "https://cache.nixos.org/"
+#    ];
+#    extra-trusted-public-keys = [
+#      #"colmena.cachix.org-1:7BzpDnjjH8ki2CT3f6GdOk7QAzPOl+1t3LvTLXqYcSg="
+#    ];
+#  };
 
   inputs = {
     niri.url = "github:YaLTer/niri";

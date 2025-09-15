@@ -54,7 +54,10 @@
     dconf-editor
     pdfarranger
     rquickshare
+  
+    pciutils 
   ];
+
 
   programs.git = {
     enable = true;
