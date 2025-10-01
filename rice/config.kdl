@@ -9,7 +9,7 @@ overview {
 
 spawn-at-startup "waybar" // Bar
 spawn-at-startup "swww-daemon" // Wallpaper
-spawn-at-startup "xwayland-satellite"
+//spawn-at-startup "xwayland-satellite"
 spawn-at-startup "hypridle"
 
 layer-rule {
@@ -20,7 +20,7 @@ layer-rule {
 }
 
 environment {
-    DISPLAY ":0"
+    //DISPLAY ":0"
     GDK_BACKEND "wayland,x11"
     CLUTTER_BACKEND "wayland"
     XDG_CURRENT_DESKTOP "Niri"

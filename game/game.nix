@@ -7,17 +7,38 @@
 #     gsteam = "GBM_BACKEND=nvidia-drm STEAM_GAMESCOPE_VRR_SUPPORTED=1 STEAM_MULTIPLE_XWAYLANDS=1 gamescope -W 1920 -H 1080 -r 120 -e --xwayland-count 2 --rt --adaptive-sync -- steam";
 #  };
 
+  programs.gamemode.enable = true;
+
   programs.steam = {
+    gamescopeSession.enable=true;
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-    # gamescopeSession.enable = true;
-     package = pkgs.steam.override {
-       #withPrimus = true;
-       #withJava = true;
-       extraPkgs = pkgs: [ pkgs.SDL2 pkgs.libjpeg pkgs.vkd3d ];
-     };
+# gamescopeSession = {
+#       enable = true;
+#       #capSysNice = true;  # Uncomment if you want better scheduling priority
+#       args = [
+#         "-W" "1920"
+#         "-H" "1080" 
+#         "-r" "120"
+#         "-e"
+#         "--xwayland-count" "3"
+#         "--force-grab-cursor"
+#         "--adaptive-sync"
+#       ];
+#       env = {
+#         GBM_BACKEND = "nvidia-drm";
+#         STEAM_MULTIPLE_XWAYLANDS = "1";
+#         STEAM_GAMESCOPE_VRR_SUPPORTED = "1";
+#       };
+#       };
+    package = pkgs.steam.override {
+      #withPrimus = true;
+      #withJava = true;
+      extraPkgs = pkgs: with pkgs;
+        [ pkgs.SDL2 pkgs.libjpeg pkgs.vkd3d ];
+    };
 
   };
 
@@ -26,7 +47,7 @@
 
   programs.gamescope = {
     enable = true;
-#     capSysNice = true;
+    capSysNice = true;
 #     args = [
 #       "-W 1920"
 #       "-H 1080"
@@ -41,12 +62,12 @@
 #       GBM_BACKEND = "nvidia-drm";
 #       STEAM_GAMESCOPE_VRR_SUPPORTED = "1";
 #       STEAM_MULTIPLE_XWAYLANDS = "1";
-#     };
+#     ;
   };
 
   home-manager.users.pj = {
     home.packages = with pkgs; [
-      #steam-run
+      steam-run
       #gamescope
       mangohud
       mesa-demos
@@ -54,13 +75,11 @@
     ];
   };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     
     # Extra packages for AMD
     extraPackages = with pkgs; [
-      rocm-opencl-icd
-      rocm-opencl-runtime
       amdvlk
     ];
     
@@ -100,8 +119,10 @@
       };
       
       # Alternative: sync mode (always uses both GPUs)
-      # sync.enable = true;
+      #sync.enable = true;
       
+      # reverseSync.enable = true;
+
       # Your specific Bus IDs
       amdgpuBusId = "PCI:4:0:0";   # AMD Radeon Vega (integrated)
       nvidiaBusId = "PCI:1:0:0";   # NVIDIA RTX 2060 Max-Q
@@ -111,9 +132,10 @@
   # Optional: Environment variables for better compatibility
   environment.variables = {
     # For Wayland + NVIDIA
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    WLR_NO_HARDWARE_CURSORS = "1";
+    # GBM_BACKEND = "nvidia-drm";
+    # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    # WLR_NO_HARDWARE_CURSORS = "1";
+    #GAMESCOPE_DISPLAY = ":1";
   };
 
   # Optional: Install useful GPU utilities
@@ -124,7 +146,7 @@
     glxinfo
     vulkan-tools
     radeontop  # AMD GPU monitoring
-    nvtop      # Both AMD and NVIDIA GPU monitoring
+    #nvtopPackages      # Both AMD and NVIDIA GPU monitoring
   ];
 
 
