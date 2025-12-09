@@ -45,7 +45,7 @@
           nixpkgs.pkgs = specialArgs.nixpkgs;
         }
         ./configuration.nix
-	./andr/android.nix
+	#./andr/android.nix
         nix-flatpak.nixosModules.nix-flatpak
         ./flatpak.nix
         ./rice/niri.nix

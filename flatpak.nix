@@ -9,5 +9,6 @@
     "org.gaphor.Gaphor"
     "com.github.tchx84.Flatseal"
     "com.discordapp.Discord"
+    "io.github.nozwock.Packet"
   ];
 }

@@ -13,7 +13,7 @@
 #  fonts.packages = with pkgs-stable; [ nerdfonts ];
  
   services.flatpak.enable = true;
-  services.displayManager.ly.enable = true;
+  #services.displayManager.ly.enable = true;
   #services.xserver.displayManager.gdm.enable = true;
   #boot.kernelParams = [ "nvidia-drm.modeset=1" ];
   services.xserver.enable = true;

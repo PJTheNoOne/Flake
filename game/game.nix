@@ -75,19 +75,19 @@
     ];
   };
 
-  hardware.graphics = {
-    enable = true;
-    
-    # Extra packages for AMD
-    extraPackages = with pkgs; [
-      amdvlk
-    ];
-    
-    # 32-bit support for AMD
-    extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
-    ];
-  };
+#  hardware.graphics = {
+#    enable = true;
+#    enable32Bit = true;
+#    # Extra packages for AMD
+#    extraPackages = with pkgs; [
+#      amdvlk
+#    ];
+#    
+#    # 32-bit support for AMD
+#    extraPackages32 = with pkgs; [
+#      driversi686Linux.amdvlk
+#    ];
+#  };
 
   # AMD GPU configuration
   boot.initrd.kernelModules = [ "amdgpu" ];
@@ -113,15 +113,15 @@
     # Prime configuration for hybrid graphics
     prime = {
       # Enable PRIME offload mode
-      offload = {
-        enable = true;
-        enableOffloadCmd = true;
-      };
+      # offload = {
+      #   enable = true;
+      #   enableOffloadCmd = true;
+      # };
       
       # Alternative: sync mode (always uses both GPUs)
-      #sync.enable = true;
+      # sync.enable = true;
       
-      # reverseSync.enable = true;
+      reverseSync.enable = true;
 
       # Your specific Bus IDs
       amdgpuBusId = "PCI:4:0:0";   # AMD Radeon Vega (integrated)
@@ -143,7 +143,6 @@
     nvidia-vaapi-driver
     libva-utils
     pciutils
-    glxinfo
     vulkan-tools
     radeontop  # AMD GPU monitoring
     #nvtopPackages      # Both AMD and NVIDIA GPU monitoring

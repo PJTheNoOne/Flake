@@ -1,5 +1,8 @@
 { inputs, config, nixpkgs, pkgs, pkgs-stable, ... }: {
 
+  # services.displayManager.gdm.enable = true;
+  services.displayManager.ly.enable = true;
+
   programs.niri = with nixpkgs; {
     enable = true;
   };

@@ -9,7 +9,7 @@
       };
     };
   };
-  services.blueman.enable = true;
+#  services.blueman.enable = true;
 #  hardware.pulseaudio = {
 #    enable = true;
 #    package = pkgs.pulseaudioFull;
@@ -21,10 +21,10 @@
           enable = true;
           enable32Bit = true;
       };
-  
-      amdgpu.amdvlk = {
-          enable = true;
-          support32Bit.enable = true;
-      };
+      logitech.wireless.enable = true; 
+#      amdgpu.amdvlk = {
+#          enable = true;
+#          support32Bit.enable = true;
+#      };
   };
 }
