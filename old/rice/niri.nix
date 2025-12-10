@@ -20,6 +20,8 @@
       #swaylock
       mako
 
+      ghostty
+
       xdg-desktop-portal-gtk
       xdg-desktop-portal-gnome
 

@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, config, pkgs, pkgs-stable, ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
@@ -10,30 +10,11 @@
       ./hardware-configuration.nix
     ];
 
-#  fonts.packages = with pkgs-stable; [ nerdfonts ];
- 
-  services.flatpak.enable = true;
-  #services.displayManager.ly.enable = true;
-  #services.xserver.displayManager.gdm.enable = true;
-  #boot.kernelParams = [ "nvidia-drm.modeset=1" ];
-  services.xserver.enable = true;
-
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-  };
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages;
-  boot.initrd.luks.devices."luks-524789c6-d47c-4af2-a9c2-d84b44865227".device = "/dev/disk/by-uuid/524789c6-d47c-4af2-a9c2-d84b44865227";
-  networking.hostName = "craftingtable"; # Define your hostname.
+
+  networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -72,20 +53,19 @@
     isNormalUser = true;
     description = "pj";
     extraGroups = [ "networkmanager" "wheel" ];
-    #packages = with pkgs; [];
+    packages = with pkgs; [];
   };
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    xwayland
     git
   ];
-
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  hardware.graphics = { enable = true; };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -112,6 +92,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 
 }
