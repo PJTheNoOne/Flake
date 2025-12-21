@@ -36,7 +36,7 @@ environment {
     _JAVA_OPTIONS "-Dsun.java2d.uiScale=1";
 }
 debug {
-    render-drm-device "/dev/dri/card2"
+//    render-drm-device "/dev/dri/card2"
 }
 // Input device configuration.
 // Find the full list of options on the wiki:
@@ -79,8 +79,8 @@ input {
     trackpoint {
         // off
         // natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
+        accel-speed 0.2
+        accel-profile "flat"
         // scroll-method "on-button-down"
         // scroll-button 273
         // middle-emulation

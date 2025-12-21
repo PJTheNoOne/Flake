@@ -67,7 +67,7 @@
           profile.name = "wide";
           profile.outputs = [
             {
-              criteria = "Nreal one Unknown";
+              criteria = "Nreal One Unknown";
               status = "enable";
               mode = "3840x1080@60.000";
               position = "0,0";

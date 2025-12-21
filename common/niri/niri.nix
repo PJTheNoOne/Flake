@@ -19,7 +19,7 @@
   home-manager.users.pj = {
     home.file.".config/niri/config.kdl".source = ./config.kdl;
     home.file.".config/hypr/hypridle.conf".source = ./hypridle.conf;
-    home.file.".config/ghostty/config".source = ./config;
+    #home.file.".config/ghostty/config".source = ./config;
     home.packages = with pkgs; [
       # niri
       wireplumber
@@ -28,8 +28,6 @@
       fuzzel
       #swaylock
       mako
-
-      ghostty
 
       xdg-desktop-portal-gtk
       xdg-desktop-portal-gnome
@@ -42,7 +40,20 @@
 
       wl-clipboard
     ];
+
+    programs.ghostty = {
+      enable = true;
+      settings = {
+        term = "xterm-256color";
+      };
+      enableBashIntegration = true;
+      settings = {
+        theme = "Abernathy";
+        background-opacity = "0.95";
+      };
+    };
   };
+
   
   xdg.portal = {
     enable = true;
