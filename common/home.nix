@@ -54,6 +54,7 @@
       prismlauncher
       solaar
       bluetui
+      net-tools
     ];
   
     programs.git = {
