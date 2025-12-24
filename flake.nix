@@ -92,6 +92,7 @@
         ./common/flatpak.nix
         ./common/niri/niri.nix
         ./common/niri/waybar.nix
+	./common/art.nix
       ];
     };
   };
