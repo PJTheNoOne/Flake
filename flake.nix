@@ -93,6 +93,7 @@
         ./common/niri/niri.nix
         ./common/niri/waybar.nix
 	./common/art.nix
+	./common/virt.nix
       ];
     };
   };

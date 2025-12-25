@@ -1,6 +1,21 @@
-{ lib, ... }:{
+{ pkgs, lib, ... }:{
 
   networking.hostName = lib.mkForce "commandblock";
+  # Enable usbmuxd service
+  services.usbmuxd = {
+    enable = true;
+    package = pkgs.usbmuxd2;  # usbmuxd2 is generally better
+  };
+
+  # Add libimobiledevice tools if you want to actually do anything useful
+  environment.systemPackages = with pkgs; [
+    libimobiledevice
+    ifuse  # if you want to mount the filesystem
+    usbutils
+  ];
+
+  # Your user needs to be in the right group
+  users.users.pj.extraGroups = [ "usbmux" ];
 
   home-manager.users.pj = {
     
