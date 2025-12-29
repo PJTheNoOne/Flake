@@ -1,6 +1,29 @@
 { inputs, config, nixpkgs, pkgs, pkgs-stable, ... }: {
 
   services.displayManager.ly.enable = true;
+  services.displayManager.ly.settings = {
+    animation = "matrix";
+    auth_fails = 3;
+    battery_id = "BAT0";
+    bigclock = "en";
+    bigclock_12hr = false;
+    bigclock_seconds = true;
+    vi_mode = true;
+  };
+
+  services.fprintd.enable = true;
+
+  
+
+  security.pam.services = {
+    ly.fprintAuth = true;
+    ly.rules.auth.fprintd.order = config.security.pam.services.ly.rules.auth.unix.order + 75;
+    hyprlock.rules.auth.fprintd.order = config.security.pam.services.hyprlock.rules.auth.unix.order + 75;
+    sudo.rules.auth.fprintd.order = config.security.pam.services.sudo.rules.auth.unix.order + 75;
+    hyprlock.rules.auth.fprintd.settings.timeout = 3;
+    sudo.rules.auth.fprintd.settings.timeout = 3;
+
+  };
 
   programs.niri = with nixpkgs; {
     enable = true;
