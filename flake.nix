@@ -8,11 +8,12 @@
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     ghostty.url = "github:ghostty-org/ghostty";
+    nixCats.url = "github:BirdeeHub/nixCats-nvim";
   };
-  outputs = { self, niri, nixpkgs, nixpkgs-stable, ghostty, home-manager, nix-flatpak, ... }: {
+  outputs = { self, niri, nixpkgs, nixpkgs-stable, ghostty, home-manager, nix-flatpak, nixCats, ... }@inputs: {
     nixosConfigurations.craftingtable = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      #specialArgs = { inherit nixpkgs; };
+      specialArgs = { inherit inputs; };
       modules = [
         {
           nixpkgs.config.allowUnfree = true;
@@ -33,7 +34,7 @@
     };
     nixosConfigurations.lectern = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      #specialArgs = { inherit nixpkgs; };
+      specialArgs = { inherit inputs; };
       modules = [
         {
           nixpkgs.config.allowUnfree = true;
@@ -54,7 +55,7 @@
     };
     nixosConfigurations.autocrafter = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      #specialArgs = { inherit nixpkgs; };
+      specialArgs = { inherit inputs; };
       modules = [
         {
           nixpkgs.config.allowUnfree = true;
@@ -75,7 +76,7 @@
     };
     nixosConfigurations.commandblock = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      #specialArgs = { inherit nixpkgs; };
+      specialArgs = { inherit inputs; };
       modules = [
         {
           nixpkgs.config.allowUnfree = true;

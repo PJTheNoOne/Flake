@@ -52,6 +52,10 @@
   home-manager.useUserPackages = true;
   home-manager.users.pj = {
   
+    imports = [
+      inputs.nixCats.homeModule
+    ];
+
     xdg.mimeApps = {
       enable = true;
       
@@ -79,6 +83,53 @@
       net-tools
     ];
   
+    nixCats = {
+      enable = true;
+      
+      luaPath = "${./.config/nvim}";
+      packageNames = [ "nixCats" ];
+      
+      # Use categoryDefinitions.merge (it IS a function here)
+      categoryDefinitions.merge = { pkgs, settings, categories, name, ... }: {
+        # Standard category names from nixCats
+        startupPlugins = {
+          general = with pkgs.vimPlugins; [
+            nvim-treesitter.withAllGrammars
+            telescope-nvim
+            plenary-nvim
+          ];
+        };
+        
+        # For LSPs and tools, use either:
+        # 1. propagatedBuildInputs (they get added to PATH)
+        propagatedBuildInputs = {
+          general = with pkgs; [
+            lua-language-server
+            nixd
+          ];
+        };
+        
+        # Or 2. environmentVariables to set PATH directly
+        # environmentVariables = {
+        #   general = {
+        #     PATH = with pkgs; lib.makeBinPath [ lua-language-server nixd ];
+        #   };
+        # };
+      };
+      
+      packageDefinitions.merge = {
+        nixCats = { pkgs, ... }: {
+          settings = {
+            wrapRc = true;
+            aliases = [ "vim" "vi" ];
+          };
+          categories = {
+            general = true;
+          };
+        };
+      };
+    };
+
     programs.git = {
       enable = true;
       settings = {
@@ -91,21 +142,6 @@
       enable = true;
       plugins = with pkgs; [
         tmuxPlugins.better-mouse-mode
-      ];
-    };
-  
-    programs.neovim = {
-      enable = true;
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-  #    extraConfig = lib.fileContents ../path/to/your/init.vim;
-      plugins = [
-        pkgs.vimPlugins.nvim-tree-lua
-        {
-          plugin = pkgs.vimPlugins.vim-startify;
-          config = "let g:startify_change_to_vcs_root = 0";
-        }
       ];
     };
   
