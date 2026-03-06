@@ -1,4 +1,5 @@
 { pkgs, ... }:{
+  users.users.pj.extraGroups = [ "kvm" "libvirtd" ];
   # https://wiki.nixos.org/wiki/Podman
   virtualisation.containers.enable = true;
   virtualisation = {

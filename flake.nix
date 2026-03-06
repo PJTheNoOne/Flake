@@ -72,6 +72,8 @@
         ./common/flatpak.nix
         ./common/rice/niri.nix
         ./common/rice/waybar.nix
+        ./common/art.nix
+        ./common/virt.nix
       ];
     };
     nixosConfigurations.commandblock = nixpkgs.lib.nixosSystem {

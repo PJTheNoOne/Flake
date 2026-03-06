@@ -10,5 +10,6 @@
 #    "org.gaphor.Gaphor"
     "com.github.tchx84.Flatseal"
     "com.discordapp.Discord"
+#    "org.localsend.localsend_app"
   ];
 }

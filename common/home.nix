@@ -1,6 +1,7 @@
-{ config, pkgs, inputs, nixpkgs, ... }:
+{ config, pkgs, pkgs-stable, inputs, nixpkgs, ... }:
 
 {
+  nix.settings.download-buffer-size = 524288000;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # https://nixos.wiki/wiki/Tailscale
   services.tailscale.enable = true;
@@ -48,6 +49,11 @@
     };
   };
 
+  programs.localsend = {
+    enable = true;
+    openFirewall = true;
+  };
+
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.users.pj = {
@@ -81,6 +87,8 @@
       solaar
       bluetui
       net-tools
+      wiremix
+      pkgs-stable.freecad
     ];
   
     nixCats = {

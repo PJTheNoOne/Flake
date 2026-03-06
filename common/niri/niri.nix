@@ -1,6 +1,7 @@
 { inputs, config, nixpkgs, pkgs, pkgs-stable, ... }: {
 
   services.displayManager.ly.enable = true;
+  services.displayManager.ly.package = pkgs.ly;
   services.displayManager.ly.settings = {
     animation = "matrix";
     auth_fails = 3;
@@ -22,6 +23,7 @@
     sudo.rules.auth.fprintd.order = config.security.pam.services.sudo.rules.auth.unix.order + 75;
     hyprlock.rules.auth.fprintd.settings.timeout = 3;
     sudo.rules.auth.fprintd.settings.timeout = 3;
+    ly.rules.auth.fprintd.settings.timeout = 3;
 
   };
 
