@@ -57,7 +57,7 @@
       xdg-desktop-portal-gtk
       xdg-desktop-portal-gnome
 
-      swww
+      awww
       waybar
       xwayland
       xwayland-satellite
