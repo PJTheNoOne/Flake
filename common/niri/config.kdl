@@ -10,7 +10,7 @@ overview {
 spawn-at-startup "hypridle"
 spawn-at-startup "kanshi"
 spawn-at-startup "waybar" // Bar
-spawn-at-startup "swww-daemon" // Wallpaper
+spawn-at-startup "awww-daemon" // Wallpaper
 //spawn-at-startup "xwayland-satellite"
 
 layer-rule {

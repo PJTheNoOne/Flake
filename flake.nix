@@ -98,6 +98,7 @@
 	      ./common/art.nix
       	./common/virt.nix
         ./common/dev.nix
+        # ./common/lm-studio.nix
       ];
     };
   };
