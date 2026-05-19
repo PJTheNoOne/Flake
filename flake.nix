@@ -98,8 +98,10 @@
         ./common/flatpak.nix
         ./common/niri/niri.nix
         ./common/niri/waybar.nix
-	./common/art.nix
-	./common/virt.nix
+	      ./common/art.nix
+      	./common/virt.nix
+        ./common/dev.nix
+        # ./common/lm-studio.nix
       ];
     };
   };
