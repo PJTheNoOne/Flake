@@ -1,4 +1,10 @@
 { ... }:{
+  services.udev.extraRules = ''
+    # Your rule goes here
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="0852", ATTR{authorized}="0"
+    SUBSYSTEM=="usb",ATTRS{idVendor}=="05c6",ATTRS{idProduct}=="9008",MODE="0666"
+  '';
+
   home-manager.user.pj = {
     
     services.kanshi = {

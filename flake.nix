@@ -26,10 +26,13 @@
         ./hosts/craftingtable/configuration.nix
         #./hosts/craftingtable/extend.nix
         ./common/home.nix
-        #nix-flatpak.nixosModules.nix-flatpak
-        #./common/flatpak.nix
-        #./common/rice/niri.nix
-        #./common/rice/waybar.nix
+        nix-flatpak.nixosModules.nix-flatpak
+        ./common/flatpak.nix
+        ./common/niri/niri.nix
+        ./common/niri/waybar.nix
+        ./common/art.nix
+        ./common/virt.nix
+        ./common/game.nix
       ];
     };
     nixosConfigurations.lectern = nixpkgs.lib.nixosSystem {
