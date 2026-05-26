@@ -5,11 +5,9 @@
   services.displayManager.ly.settings = {
     animation = "matrix";
     auth_fails = 3;
-    battery_id = "BAT0";
     bigclock = "en";
     bigclock_12hr = false;
     bigclock_seconds = true;
-    vi_mode = true;
   };
 
   services.fprintd.enable = true;
