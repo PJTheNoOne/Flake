@@ -10,20 +10,21 @@
     bigclock_seconds = true;
   };
 
-  services.fprintd.enable = true;
+  #services.fprintd.enable = true;
 
   
 
-  security.pam.services = {
-    ly.fprintAuth = true;
-    ly.rules.auth.fprintd.order = config.security.pam.services.ly.rules.auth.unix.order + 75;
-    hyprlock.rules.auth.fprintd.order = config.security.pam.services.hyprlock.rules.auth.unix.order + 75;
-    sudo.rules.auth.fprintd.order = config.security.pam.services.sudo.rules.auth.unix.order + 75;
-    hyprlock.rules.auth.fprintd.settings.timeout = 3;
-    sudo.rules.auth.fprintd.settings.timeout = 3;
-    ly.rules.auth.fprintd.settings.timeout = 3;
+  #security.pam.services = {
+    #ly.fprintAuth = true;
+    #ly.rules.auth.fprintd.order = config.security.pam.services.ly.rules.auth.login.order + 75;
+    #ly.rules.auth.fprintd.control ="sufficient";
+    #hyprlock.rules.auth.fprintd.order = config.security.pam.services.hyprlock.rules.auth.unix.order + 75;
+    #sudo.rules.auth.fprintd.order = config.security.pam.services.sudo.rules.auth.unix.order + 75;
+    #hyprlock.rules.auth.fprintd.settings.timeout = 3;
+    #sudo.rules.auth.fprintd.settings.timeout = 3;
+    #ly.rules.auth.fprintd.settings.timeout = 3;
 
-  };
+  #};
 
   programs.niri = with nixpkgs; {
     enable = true;

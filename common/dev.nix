@@ -6,7 +6,7 @@
   #services.lmStudio = { enable = true; gpu = "intel"; };
   home-manager.users.pj = {
     home.packages = with pkgs; [
-      code-cursor
+      code
       ollama
       docker-compose
     ];
