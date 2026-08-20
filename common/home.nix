@@ -16,6 +16,7 @@
 
   environment.shellAliases = {
         nixos-update="nix flake update && sudo nixos-rebuild switch --flake ~/nix/";
+        nixos-update-offline="sudo nixos-rebuild switch --flake ~/nix/ --offline";
   };
 
   nix.gc = {
