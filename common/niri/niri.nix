@@ -40,11 +40,13 @@
     #jack.enable = true;
   };
 
-  home-manager.users.pj = {
-    home.file.".config/niri/config.kdl".source = ./config.kdl;
+  home-manager.users.pj = {config, ...}: {
+    home.file.".config/niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix/common/niri/config.kdl";
+    #home.file.".config/niri/config.kdl".source = ./config.kdl;
     home.file.".config/hypr/hypridle.conf".source = ./hypridle.conf;
     #home.file.".config/ghostty/config".source = ./config;
     home.packages = with pkgs; [
+      nirimod
       # niri
       wireplumber
       playerctl

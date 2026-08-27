@@ -9,13 +9,9 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     ghostty.url = "github:ghostty-org/ghostty";
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
+    nirimod.url = "github:srinivasr/nirimod";
   };
-  outputs = { self, niri, nixpkgs, nixpkgs-stable, ghostty, home-manager, nix-flatpak, nixCats, ... }@inputs: 
-    let
-      pkgs-with-ollama-sycl = nixpkgs.legacyPackages.x86_64-linux.extend (self: super: {
-        ollama = (import ./common/ollama-pkg-override.nix { pkgs = super; });
-      });
-    in
+  outputs = { self, niri, nixpkgs, nixpkgs-stable, ghostty, home-manager, nix-flatpak, nixCats, nirimod, ... }@inputs: 
   {
     nixosConfigurations.craftingtable = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -107,7 +103,8 @@
 	      ./common/art.nix
       	./common/virt.nix
         ./common/dev.nix
-        ./common/ollama.nix
+        ./common/3d.nix
+        #./common/ollama.nix
         # ./common/lm-studio.nix
       ];
     };
