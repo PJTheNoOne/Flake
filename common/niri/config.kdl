@@ -610,12 +610,10 @@ binds {
 output "eDP-1" {
     mode "1920x1200@60.003"
 
-    scale 1.25
+    scale 1.0
 
     transform "normal"
-    position x=542 y=-76
-
-    variable-refresh-rate
+    position x=0 y=0
 
 }
 hotkey-overlay {
@@ -627,5 +625,7 @@ output "HDMI-A-1" {
     scale 1.0
 
     transform "normal"
-    position x=2078 y=-76
+    position x=1920 y=0
 }
+
+window-rule { match title=r"ONLYOFFICE"; default-window-height { proportion 1.0; }; clip-to-geometry true; }

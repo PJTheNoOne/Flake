@@ -78,9 +78,12 @@
     home.username = "pj";
     home.homeDirectory = "/home/pj";
   
+    programs.fzf.enableBashIntegration = true;
+    programs.fzf.enable = true;
+
     home.packages = with pkgs; [
       unzip
-      fzf #fuzzy finder
+      #fzf #fuzzy finder
       #onlyoffice-desktopeditors
       #pdfarranger
       pciutils 

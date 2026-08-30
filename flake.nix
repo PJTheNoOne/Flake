@@ -104,6 +104,7 @@
       	./common/virt.nix
         ./common/dev.nix
         ./common/3d.nix
+        ./common/llm.nix
         #./common/ollama.nix
         # ./common/lm-studio.nix
       ];

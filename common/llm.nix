@@ -43,6 +43,34 @@ in
         on every rebuild.
       '';
     };
+
+    enableIntegratedGpu = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Ollama refuses to use integrated GPUs (Xe included) unless explicitly told to —
+        it treats shared-memory iGPUs as a "you asked for this" opt-in rather than a
+        default. Sets OLLAMA_IGPU_ENABLE=1. Turn this off if you'd genuinely rather it
+        fall back to CPU on laptops with weak iGPUs.
+      '';
+    };
+
+    extraEnvironmentVariables = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      description = "Extra OLLAMA_* environment variables, merged with the iGPU toggle above.";
+    };
+
+    remoteOllama = {
+      enable = lib.mkEnableOption ''
+        exposing Ollama's API beyond this machine, reachable ONLY via Tailscale — for
+        when another machine (e.g. one running its own Open WebUI) needs to reach this
+        box's Ollama directly. Nothing on the physical LAN/Wi-Fi interface can reach this
+        port, ever, regardless of subnet, firewall rules elsewhere, or what network this
+        laptop happens to be on. The only two ways in are the Tailscale interface and
+        localhost — there is no third path in this module, by design.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -68,9 +96,18 @@ in
     services.ollama = {
       enable = true;
       package = cfg.package;
-      host = cfg.host;
+      # 0.0.0.0 when remote access is on, but see the firewall block below — the only
+      # interfaces actually allowed through to this port are tailscale0 and loopback.
+      # Binding wide and then filtering at the firewall is what lets both localhost and
+      # Tailscale work off a single Ollama listener; Ollama itself can't be told to
+      # listen on two specific interfaces and no others.
+      host = if cfg.remoteOllama.enable then "0.0.0.0" else cfg.host;
       port = cfg.port;
       loadModels = cfg.models;
+      environmentVariables = lib.mkMerge [
+        (lib.mkIf cfg.enableIntegratedGpu { OLLAMA_IGPU_ENABLE = "1"; })
+        cfg.extraEnvironmentVariables
+      ];
     };
 
     home-manager.users.${cfg.user} = {
@@ -78,5 +115,15 @@ in
         vulkan-tools
       ];
     };
+
+    services.tailscale.enable = lib.mkIf cfg.remoteOllama.enable true;
+
+    # --- The only door in besides localhost: Tailscale, nothing else -----------
+    # Ollama's port is opened on the tailscale0 interface exclusively. It is never
+    # added to networking.firewall.allowedTCPPorts (which would open it on every
+    # interface) and there is no IP-allowlist branch left in this module — physical
+    # LAN/Wi-Fi gets nothing, no matter what subnet or IP this laptop lands on.
+    networking.firewall.interfaces."tailscale0".allowedTCPPorts =
+      lib.mkIf cfg.remoteOllama.enable [ cfg.port ];
   };
 }

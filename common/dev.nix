@@ -1,8 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, services, ... }:
 {
   # virtualisation.docker.enable = true;
   # users.users.pj.extraGroups = [ "docker" ];
   users.users.pj.extraGroups = [ "kvm" "libvirtd" "docker"];
+
+  services.local-llm = {
+    enable = true;
+    user = "pj"; # or whatever the host's actual home-manager user is
+    models = [ "qwen2.5:7b" ]; # optional, leave [] if you'd rather pull by hand
+    remoteOllama.enable = true;
+    extraEnvironmentVariables = {OLLAMA_CONTEXT_LENGTH = "262000";};
+  };
 
   virtualisation.containers.enable = true;
   virtualisation = {
