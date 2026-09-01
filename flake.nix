@@ -35,50 +35,8 @@
         ./common/art.nix
         ./common/virt.nix
         ./common/game.nix
-      ];
-    };
-    nixosConfigurations.lectern = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        {
-          nixpkgs.config.allowUnfree = true;
-          _module.args.pkgs-stable = import nixpkgs-stable {
-            system = "x86_64-linux";
-            config.allowUnfree = true;
-          };
-        }
-        home-manager.nixosModules.home-manager 
-        ./hosts/lectern/configuration.nix
-        #./hosts/lectern/extend.nix
-        ./common/home.nix
-        #nix-flatpak.nixosModules.nix-flatpak
-        #./common/flatpak.nix
-        #./common/rice/niri.nix
-        #./common/rice/waybar.nix
-      ];
-    };
-    nixosConfigurations.autocrafter = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        {
-          nixpkgs.config.allowUnfree = true;
-          _module.args.pkgs-stable = import nixpkgs-stable {
-            system = "x86_64-linux";
-            config.allowUnfree = true;
-          };
-        }
-        home-manager.nixosModules.home-manager 
-        ./hosts/autocrafter/configuration.nix
-        ./hosts/autocrafter/extend.nix
-        ./common/home.nix
-        nix-flatpak.nixosModules.nix-flatpak
-        ./common/flatpak.nix
-        ./common/rice/niri.nix
-        ./common/rice/waybar.nix
-        ./common/art.nix
-        ./common/virt.nix
+        ./common/dev.nix
+        ./common/llm.nix
       ];
     };
     nixosConfigurations.commandblock = nixpkgs.lib.nixosSystem {
