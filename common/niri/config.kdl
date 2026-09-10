@@ -27,6 +27,7 @@ debug
 // Find the full list of options on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Input
 input {
+    warp-mouse-to-focus
     focus-follows-mouse max-scroll-amount="33%"
 
     keyboard {
@@ -137,7 +138,7 @@ layout {
     // - "always", the focused column will always be centered.
     // - "on-overflow", focusing a column will center it if it doesn't fit
     //   together with the previously focused column.
-    center-focused-column "never"
+    center-focused-column "on-overflow"
 
     // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
     preset-column-widths {
@@ -631,3 +632,7 @@ output "HDMI-A-1" {
 }
 
 window-rule { match title=r"ONLYOFFICE"; default-window-height { proportion 1.0; }; clip-to-geometry true; }
+
+gestures {
+    hot-corners
+}
