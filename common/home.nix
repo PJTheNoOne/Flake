@@ -19,6 +19,10 @@
         nixos-update-offline="sudo nixos-rebuild switch --flake ~/nix/ --offline";
   };
 
+  environment.sessionVariables={
+    PATH = [ "/home/pj/.npm-global/bin" ];
+  };
+
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -78,6 +82,8 @@
     home.username = "pj";
     home.homeDirectory = "/home/pj";
   
+    programs.bash.enable = true;
+
     programs.fzf.enableBashIntegration = true;
     programs.fzf.enable = true;
 

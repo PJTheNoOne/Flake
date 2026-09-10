@@ -9,8 +9,13 @@
     user = "pj"; # or whatever the host's actual home-manager user is
     models = [ "qwen2.5:7b" ]; # optional, leave [] if you'd rather pull by hand
     remoteOllama.enable = true;
-    extraEnvironmentVariables = {OLLAMA_CONTEXT_LENGTH = "262000";};
+    extraEnvironmentVariables = {OLLAMA_CONTEXT_LENGTH = "65536";
+      GGML_VK_VISIBLE_DEVICES = "0"; 
+      OLLAMA_VULKAN= "1";
+    };
   };
+
+  environment.systemPackages = [ pkgs.distrobox ];
 
   virtualisation.containers.enable = true;
   virtualisation = {
@@ -31,6 +36,7 @@
       # code
       # ollama
       docker-compose
+      nodejs
     ];
     programs.vscode = {
       enable = true;
