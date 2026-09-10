@@ -27,7 +27,6 @@ debug
 // Find the full list of options on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Input
 input {
-    warp-mouse-to-focus
     focus-follows-mouse max-scroll-amount="33%"
 
     keyboard {
@@ -57,6 +56,8 @@ input {
 
 
         accel-profile "flat"
+
+        accel-speed -0.5
     }
     trackpoint {
         // off
@@ -136,7 +137,7 @@ layout {
     // - "always", the focused column will always be centered.
     // - "on-overflow", focusing a column will center it if it doesn't fit
     //   together with the previously focused column.
-    center-focused-column "always"
+    center-focused-column "never"
 
     // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
     preset-column-widths {
@@ -606,6 +607,7 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+    Mod+Shift+S { screenshot; }
 }
 output "eDP-1" {
     mode "1920x1200@60.003"
