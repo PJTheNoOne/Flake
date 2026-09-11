@@ -1,4 +1,4 @@
-{ pkgs, services, ... }:
+{ config, pkgs, services, ... }:
 {
   # virtualisation.docker.enable = true;
   # users.users.pj.extraGroups = [ "docker" ];
@@ -43,6 +43,36 @@
 #      profiles.default.userSettings = {
 #        "docker.host" = "unix:///run/podman/podman.sock";
 #      };
+    };
+    programs.pi-coding-agent = {
+      enable = true;
+      extraPackages = [
+        pkgs.nodejs
+        pkgs.bun
+
+      ];
+      configDir = "/home/pj/nix/common/pi/agent";
+      models = {
+        providers = {
+          ollama = {
+            api = "openai-completions";
+            apiKey = "ollama";
+            baseUrl = "http://localhost:11434/v1";
+            models = [
+              { id = "qwen3.5:latest"; }
+              { id = "qwen3.8:latest"; }
+              { id = "qwen2.5:7b"; }
+            ];
+          };
+        };
+      };
+    
+      settings = {
+        defaultProvider = "ollama";
+        defaultModel = "qwen3.5:latest";
+        defaultThinkingLevel = "medium";
+        theme = "dark";
+      };
     };
   };
 }

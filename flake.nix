@@ -33,7 +33,6 @@
         ./common/niri/niri.nix
         ./common/niri/waybar.nix
         ./common/art.nix
-        ./common/virt.nix
         ./common/game.nix
         ./common/dev.nix
         ./common/llm.nix
@@ -59,12 +58,9 @@
         ./common/niri/niri.nix
         ./common/niri/waybar.nix
 	      ./common/art.nix
-      	./common/virt.nix
         ./common/dev.nix
         ./common/3d.nix
         ./common/llm.nix
-        #./common/ollama.nix
-        # ./common/lm-studio.nix
       ];
     };
   };

@@ -7,7 +7,7 @@
       rawtherapee
       ffmpeg
       mpv
-      davinci-resolve
+      # davinci-resolve
       blender
       onlyoffice-desktopeditors
     ];
