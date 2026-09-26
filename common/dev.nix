@@ -34,9 +34,9 @@
   home-manager.users.pj = {
     home.packages = with pkgs; [
       # code
-      # ollama
       docker-compose
       nodejs
+      bun
     ];
     programs.vscode = {
       enable = true;
@@ -47,14 +47,42 @@
     programs.pi-coding-agent = {
       enable = true;
       extraPackages = [
-        pkgs.nodejs
         pkgs.bun
-
+        pkgs.nodejs
       ];
+      settings = {
+        retry = {
+          enabled = false;  # flip back to true once you're done debugging
+          provider = {
+            timeoutMs = 3600000;
+          };
+        };
+        httpIdleTimeoutMs = 0;
+      };
       configDir = "/home/pj/nix/common/pi/agent";
       models = {
         providers = {
-          ollama = {
+          craftingtable = {
+            api = "openai-completions";
+            apiKey = "ollama";
+            baseUrl = "http://craftingtable.end-ulmer.ts.net:11434/v1";
+            models = [
+              { id = "qwen3.5:latest"; }
+              { id = "qwen3.8:latest"; }
+              { id = "qwen2.5:7b"; }
+            ];
+          };         
+          commandblock = {
+            api = "openai-completions";
+            apiKey = "ollama";
+            baseUrl = "http://commandblock.end-ulmer.ts.net:11434/v1";
+            models = [
+              { id = "qwen3.5:latest"; }
+              { id = "qwen3.8:latest"; }
+              { id = "qwen2.5:7b"; }
+            ];
+          };
+          localhost = {
             api = "openai-completions";
             apiKey = "ollama";
             baseUrl = "http://localhost:11434/v1";
@@ -64,14 +92,19 @@
               { id = "qwen2.5:7b"; }
             ];
           };
+          shulker = {
+            api = "openai-completions";
+            apiKey = "ollama";
+            baseUrl = "http://shulker.end-ulmer.ts.net:11435/v1";
+            models = [
+              { id = "gemma4:12b"; }
+              { id = "qwen3.5:0.8b"; }
+              { id = "qwen3.5:122b"; }
+              { id = "qwen3.8:latest"; }
+              { id = "fatgus:latest"; }
+            ];
+          };
         };
-      };
-    
-      settings = {
-        defaultProvider = "ollama";
-        defaultModel = "qwen3.5:latest";
-        defaultThinkingLevel = "medium";
-        theme = "dark";
       };
     };
   };
