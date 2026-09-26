@@ -611,6 +611,8 @@ binds {
     Mod+Shift+S { screenshot; }
 }
 output "eDP-1" {
+    off
+
     mode "1920x1200@60.003"
 
     scale 1.0
@@ -623,7 +625,7 @@ hotkey-overlay {
     skip-at-startup
 }
 output "HDMI-A-1" {
-    mode "1920x1080@60.000"
+    mode "1920x1080@30.000"
 
     scale 1.0
 
