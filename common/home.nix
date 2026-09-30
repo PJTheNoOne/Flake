@@ -9,6 +9,7 @@
 
   #networking.nameservers = [ "100.100.100.100" "8.8.8.8" "1.1.1.1" ];
   networking.search = [ "end-ulmer.ts.net" ];
+  networking.networkmanager.enable = true;
 
   environment.variables.EDITOR = "nvim";
 
@@ -95,6 +96,7 @@
       net-tools
       wiremix
       pkgs-stable.freecad
+      usbutils
     ];
   
     nixCats = {

@@ -27,6 +27,8 @@ debug
 // Find the full list of options on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Input
 input {
+    focus-follows-mouse max-scroll-amount="33%"
+
     keyboard {
         numlock
 
@@ -135,7 +137,11 @@ layout {
     // - "always", the focused column will always be centered.
     // - "on-overflow", focusing a column will center it if it doesn't fit
     //   together with the previously focused column.
+<<<<<<< HEAD
+    center-focused-column "never"
+=======
     center-focused-column "on-overflow"
+>>>>>>> 52325fe6eada8f495a13e7956779138cabc41ce1
 
     // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
     preset-column-widths {
@@ -608,8 +614,6 @@ binds {
     Mod+Shift+S { screenshot; }
 }
 output "eDP-1" {
-    off
-
     mode "1920x1200@60.003"
 
     scale 1.0
@@ -622,7 +626,7 @@ hotkey-overlay {
     skip-at-startup
 }
 output "HDMI-A-1" {
-    mode "1920x1080@30.000"
+    mode "1920x1080@60.000"
 
     scale 1.0
 

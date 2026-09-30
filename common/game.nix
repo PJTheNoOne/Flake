@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.extraModprobeConfig = ''
+    options cfg80211 ieee80211_regdom=DE
+  '';
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
