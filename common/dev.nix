@@ -79,8 +79,9 @@
             apiKey = "ollama";
             baseUrl = "http://craftingtable.end-ulmer.ts.net:11434/v1";
             models = [
-              { id = "qwen3.5:latest"; }
-              { id = "qwen3.8:latest"; }
+              { id = "qwen3.5:9b"; }
+              { id = "gemma4:e4b"; }
+              { id = "granite4.2:8b"; }
               { id = "qwen2.5:7b"; }
             ];
           };         
