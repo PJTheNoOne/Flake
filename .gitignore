@@ -25,3 +25,8 @@ common/pi/logs/*
 
 # Backup files (auto-generated when loading config)
 .pi/backups/*
+
+/common/pi/*
+!common/pi/env.nix
+package.json
+package-lock.json
