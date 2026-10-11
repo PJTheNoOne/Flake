@@ -1,129 +1,165 @@
 { config, lib, pkgs, ... }:
 
-let
-  cfg = config.services.local-llm;
-in
+# One module, one job: run llama.cpp's router (many GGUFs, loaded on demand)
+# on Vulkan, reachable from localhost and Tailscale, and nothing else.
+#
+# No `let ... in` on purpose: every option is read as
+# config.services.local-llm.<name>, so you can grep for where anything comes from.
 {
   options.services.local-llm = {
-    enable = lib.mkEnableOption "Ollama (Vulkan backend) as a shared, host-agnostic LLM service";
+    enable = lib.mkEnableOption "llama.cpp router (Vulkan), reachable via localhost, plus Tailscale when it is enabled";
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.ollama-vulkan;
+      default = pkgs.llama-cpp-vulkan;
       description = ''
-        Vulkan is the whole point here: `anv` (Intel), `radv` (AMD) and `nvk`/proprietary
-        (Nvidia) all speak it, so this one package works unmodified on every host in the
-        flake without you maintaining per-vendor branches. If a given host has a beefy
-        Nvidia card and you want the extra throughput, override this to `pkgs.ollama-cuda`
-        for that host specifically — everything else about this module stays the same.
+        llama.cpp built with Vulkan. One package for Intel (anv) and AMD (radv),
+        so no per-host forks. Needs a build recent enough to have router mode.
       '';
-    };
-
-    host = lib.mkOption {
-      type = lib.types.str;
-      default = "127.0.0.1";
-    };
-
-    port = lib.mkOption {
-      type = lib.types.port;
-      default = 11434; # Ollama's default; keep it unless something else fights for it
     };
 
     user = lib.mkOption {
       type = lib.types.str;
-      description = "home-manager user to hand client tooling to.";
+      description = "Human user who gets write access to the models directory.";
     };
 
-    models = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 8080;
+    };
+
+    modelsDir = lib.mkOption {
+      type = lib.types.str;
+      default = "/var/lib/llama-models";
+      description = "Drop GGUF files here. Single files at top level, multi-file models in subdirectories.";
+    };
+
+    maxLoadedModels = lib.mkOption {
+      type = lib.types.ints.positive;
+      default = 1;
+      description = "How many models the router keeps in memory at once. Raise it only if you have the VRAM.";
+    };
+
+    contextSize = lib.mkOption {
+      type = lib.types.nullOr lib.types.int;
+      default = 32768;
       description = ''
-        Model tags to pull automatically on activation (e.g. [ "qwen2.5:7b" "llama3.2:3b" ]).
-        Leave empty and pull manually with `ollama pull` if you'd rather not eat bandwidth
-        on every rebuild.
+        Context window per loaded model, in tokens. Set to null to let each model
+        use its native context, which can be enormous and will happily eat all
+        your VRAM. Per-model sizes belong in llama.cpp model presets, not here.
       '';
     };
 
-    enableIntegratedGpu = lib.mkOption {
+    gpuLayers = lib.mkOption {
+      type = lib.types.int;
+      default = 999;
+      description = "Layers to offload to the GPU. 999 means as many as fit.";
+    };
+
+    openTailscaleFirewall = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = config.services.tailscale.enable;
+      defaultText = lib.literalExpression "config.services.tailscale.enable";
       description = ''
-        Ollama refuses to use integrated GPUs (Xe included) unless explicitly told to —
-        it treats shared-memory iGPUs as a "you asked for this" opt-in rather than a
-        default. Sets OLLAMA_IGPU_ENABLE=1. Turn this off if you'd genuinely rather it
-        fall back to CPU on laptops with weak iGPUs.
+        Open the port on tailscale0 only, never on any other interface. Defaults to
+        on whenever Tailscale is enabled on this host. This module never enables
+        Tailscale itself, so manage that wherever you like.
       '';
     };
 
-    extraEnvironmentVariables = lib.mkOption {
+    environment = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
-      description = "Extra OLLAMA_* environment variables, merged with the iGPU toggle above.";
+      description = "Extra environment for the service, e.g. GGML_VK_VISIBLE_DEVICES to pick a GPU.";
     };
 
-    remoteOllama = {
-      enable = lib.mkEnableOption ''
-        exposing Ollama's API beyond this machine, reachable ONLY via Tailscale — for
-        when another machine (e.g. one running its own Open WebUI) needs to reach this
-        box's Ollama directly. Nothing on the physical LAN/Wi-Fi interface can reach this
-        port, ever, regardless of subnet, firewall rules elsewhere, or what network this
-        laptop happens to be on. The only two ways in are the Tailscale interface and
-        localhost — there is no third path in this module, by design.
-      '';
+    extraArgs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Extra llama-server flags, appended last so they win.";
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.services.local-llm.enable {
 
-    # Vendor-agnostic on purpose — this is what makes Vulkan the right call across
-    # a fleet with mixed GPUs instead of forking the config per host.
-    hardware.graphics = {
-      enable = true;
-      enable32Bit = true;
-      extraPackages = with pkgs; [
-        mesa
-        vulkan-loader
-        intel-media-driver     # harmless no-op on non-Intel hosts, needed on the Xe laptop
-        intel-compute-runtime
-        vpl-gpu-rt
-      ];
-    };
-
-    environment.systemPackages = with pkgs; [
-      vulkan-tools   # vulkaninfo, to confirm each host actually sees its GPU
+    assertions = [
+      {
+        assertion = config.networking.firewall.enable;
+        message = ''
+          services.local-llm binds 0.0.0.0 and relies on the firewall to restrict it
+          to tailscale0. With the firewall off, that is your whole LAN.
+        '';
+      }
     ];
 
-    services.ollama = {
-      enable = true;
-      package = cfg.package;
-      # 0.0.0.0 when remote access is on, but see the firewall block below — the only
-      # interfaces actually allowed through to this port are tailscale0 and loopback.
-      # Binding wide and then filtering at the firewall is what lets both localhost and
-      # Tailscale work off a single Ollama listener; Ollama itself can't be told to
-      # listen on two specific interfaces and no others.
-      host = if cfg.remoteOllama.enable then "0.0.0.0" else cfg.host;
-      port = cfg.port;
-      loadModels = cfg.models;
-      environmentVariables = lib.mkMerge [
-        (lib.mkIf cfg.enableIntegratedGpu { OLLAMA_IGPU_ENABLE = "1"; })
-        cfg.extraEnvironmentVariables
-      ];
+    # Mesa already ships anv and radv. Nothing else is needed for Vulkan compute.
+    hardware.graphics.enable = true;
+
+    environment.systemPackages = [
+      config.services.local-llm.package # llama-cli and friends for poking at models by hand
+      pkgs.vulkan-tools # vulkaninfo --summary: does this machine see its GPU?
+    ];
+
+    users.groups.llama = { };
+
+    users.users.llama = {
+      isSystemUser = true;
+      group = "llama";
+      extraGroups = [ "render" "video" ]; # access to /dev/dri
+      description = "llama.cpp router service account";
     };
 
-    home-manager.users.${cfg.user} = {
-      home.packages = with pkgs; [
-        vulkan-tools
-      ];
+    # You write to the models directory through the llama group, no sudo.
+    # The leading 2 (setgid) keeps new files group-owned by llama.
+    users.users.${config.services.local-llm.user}.extraGroups = [ "llama" ];
+
+    systemd.tmpfiles.rules = [
+      "d ${config.services.local-llm.modelsDir} 2775 llama llama -"
+    ];
+
+    systemd.services.local-llm = {
+      description = "llama.cpp router (Vulkan)";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+
+      environment = config.services.local-llm.environment;
+
+      serviceConfig = {
+        # No --model flag: that would switch llama-server to single-model mode.
+        ExecStart = lib.escapeShellArgs (
+          [
+            (lib.getExe' config.services.local-llm.package "llama-server")
+            "--models-dir" config.services.local-llm.modelsDir
+            "--models-max" (toString config.services.local-llm.maxLoadedModels)
+            "--host" "0.0.0.0"
+            "--port" (toString config.services.local-llm.port)
+            "-ngl" (toString config.services.local-llm.gpuLayers)
+            "--jinja"
+          ]
+          ++ lib.optionals (config.services.local-llm.contextSize != null) [
+            "-c" (toString config.services.local-llm.contextSize)
+          ]
+          ++ config.services.local-llm.extraArgs
+        );
+
+        User = "llama";
+        Group = "llama";
+        Restart = "on-failure";
+        RestartSec = 5;
+
+        NoNewPrivileges = true;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ReadWritePaths = [ config.services.local-llm.modelsDir ];
+      };
     };
 
-    services.tailscale.enable = lib.mkIf cfg.remoteOllama.enable true;
-
-    # --- The only door in besides localhost: Tailscale, nothing else -----------
-    # Ollama's port is opened on the tailscale0 interface exclusively. It is never
-    # added to networking.firewall.allowedTCPPorts (which would open it on every
-    # interface) and there is no IP-allowlist branch left in this module — physical
-    # LAN/Wi-Fi gets nothing, no matter what subnet or IP this laptop lands on.
+    # Remote access is Tailscale or nothing. The port is opened on tailscale0 only,
+    # never in allowedTCPPorts (which would open it on every interface).
+    # Tailscale itself is managed elsewhere; this only punches the firewall hole.
     networking.firewall.interfaces."tailscale0".allowedTCPPorts =
-      lib.mkIf cfg.remoteOllama.enable [ cfg.port ];
+      lib.mkIf config.services.local-llm.openTailscaleFirewall [
+        config.services.local-llm.port
+      ];
   };
 }

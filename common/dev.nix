@@ -4,15 +4,12 @@
   # users.users.pj.extraGroups = [ "docker" ];
   users.users.pj.extraGroups = [ "kvm" "libvirtd" "docker"];
 
+  # Everything else (port, context, models directory, GPU layers) has a default
+  # in common/llm.nix. Per-host tweaks belong in the host's own config, because
+  # this file is imported by every host. See README-llm.md.
   services.local-llm = {
     enable = true;
-    user = "pj"; # or whatever the host's actual home-manager user is
-    models = [ "qwen2.5:7b" ]; # optional, leave [] if you'd rather pull by hand
-    remoteOllama.enable = true;
-    extraEnvironmentVariables = {OLLAMA_CONTEXT_LENGTH = "65536";
-      GGML_VK_VISIBLE_DEVICES = "0"; 
-      OLLAMA_VULKAN= "1";
-    };
+    user = "pj";
   };
 
   services.openssh = {
@@ -43,7 +40,6 @@
       enable = true;
     };
   };
-  #services.lmStudio = { enable = true; gpu = "intel"; };
   home-manager.users.pj = {
     home.packages = with pkgs; [
       docker-compose
@@ -72,39 +68,19 @@
         httpIdleTimeoutMs = 0;
       };
       configDir = "/home/pj/nix/common/pi/agent";
+
+      # The local router needs no entry here: Pi's built-in llama.cpp support
+      # defaults to http://127.0.0.1:8080. Run `/login llama.cpp` once, then
+      # `/llama` to load a model and `/model` to pick it.
+      #
+      # The old craftingtable / commandblock / localhost providers pointed at
+      # Ollama on :11434, which no longer exists, so they are gone. Reaching another
+      # host's router from Pi is the pi-llama-cpp extension's job (see README-llm.md).
+      #
+      # shulker still runs Ollama and is not managed by this module, so Pi keeps
+      # a hand-written entry for it.
       models = {
         providers = {
-          craftingtable = {
-            api = "openai-completions";
-            apiKey = "ollama";
-            baseUrl = "http://craftingtable.end-ulmer.ts.net:11434/v1";
-            models = [
-              { id = "qwen3.5:9b"; }
-              { id = "gemma4:e4b"; }
-              { id = "granite4.2:8b"; }
-              { id = "qwen2.5:7b"; }
-            ];
-          };         
-          commandblock = {
-            api = "openai-completions";
-            apiKey = "ollama";
-            baseUrl = "http://commandblock.end-ulmer.ts.net:11434/v1";
-            models = [
-              { id = "qwen3.5:latest"; }
-              { id = "qwen3.8:latest"; }
-              { id = "qwen2.5:7b"; }
-            ];
-          };
-          localhost = {
-            api = "openai-completions";
-            apiKey = "ollama";
-            baseUrl = "http://localhost:11434/v1";
-            models = [
-              { id = "qwen3.5:latest"; }
-              { id = "qwen3.8:latest"; }
-              { id = "qwen2.5:7b"; }
-            ];
-          };
           shulker = {
             api = "openai-completions";
             apiKey = "ollama";
