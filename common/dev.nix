@@ -40,7 +40,9 @@
       enable = true;
     };
   };
-  home-manager.users.pj = {
+
+  # CHANGED: now a function so we get the home-manager `config`
+  home-manager.users.pj = { config, pkgs, ... }: {
     home.packages = with pkgs; [
       docker-compose
       distrobox
@@ -96,5 +98,16 @@
         };
       };
     };
+
+    # NEW: docs + examples linked from the installed pi package. They follow the
+    # package version, so a nixpkgs bump + rebuild updates them automatically.
+    # The path inside the package is a guess; verify it with the find command below.
+        # Docs come from the built package (they survived the build)
+    home.file."${config.programs.pi-coding-agent.configDir}/docs".source =
+      "${config.programs.pi-coding-agent.package}/lib/node_modules/pi-monorepo/docs";
+
+    # Examples were stripped from the build, so take them from the package's own source
+    home.file."${config.programs.pi-coding-agent.configDir}/examples".source =
+      "${config.programs.pi-coding-agent.package.src}/packages/coding-agent/examples";
   };
 }
