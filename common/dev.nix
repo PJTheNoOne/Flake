@@ -1,4 +1,4 @@
-{ config, pkgs, services, ... }:
+{ config, pkgs, services, lib, ... }:
 {
   # virtualisation.docker.enable = true;
   # users.users.pj.extraGroups = [ "docker" ];
@@ -10,6 +10,7 @@
   services.local-llm = {
     enable = true;
     user = "pj";
+    contextSize = lib.mkIf (config.networking.hostName == "commandblock") 32768;
   };
 
   services.openssh = {
@@ -42,7 +43,22 @@
   };
 
   # CHANGED: now a function so we get the home-manager `config`
-  home-manager.users.pj = { config, pkgs, ... }: {
+  home-manager.users.pj = { config, pkgs, lib, ... }:
+  let
+    piDir = config.programs.pi-coding-agent.configDir;
+
+    # Editable bits of the pi config dir, mirrored into pi's DEFAULT location
+    # (~/.pi/agent) as out-of-store symlinks. Anything that hardcodes the default
+    # path (docs, skill installers, other agents, pi started without
+    # PI_CODING_AGENT_DIR) ends up in the one real place, and edits are live
+    # with no rebuild.
+    piMirrored = [ "extensions" "skills" "prompts" "themes" "settings.json" "models.json" ];
+    piLinks = lib.listToAttrs (map (name: {
+      name = ".pi/agent/${name}";
+      value.source = config.lib.file.mkOutOfStoreSymlink "${piDir}/${name}";
+    }) piMirrored);
+  in
+  {
     home.packages = with pkgs; [
       docker-compose
       distrobox
@@ -70,6 +86,11 @@
         httpIdleTimeoutMs = 0;
       };
       configDir = "/home/pj/nix/common/pi/agent";
+
+      # `pi install npm:...` / `pi install git:...` write the `packages` list into
+      # settings.json. As a read-only store symlink that fails. Declared keys above
+      # are re-applied on every switch; anything pi adds is kept.
+      mutableSettings = true;
 
       # The local router needs no entry here: Pi's built-in llama.cpp support
       # defaults to http://127.0.0.1:8080. Run `/login llama.cpp` once, then
@@ -99,15 +120,23 @@
       };
     };
 
-    # NEW: docs + examples linked from the installed pi package. They follow the
-    # package version, so a nixpkgs bump + rebuild updates them automatically.
-    # The path inside the package is a guess; verify it with the find command below.
-        # Docs come from the built package (they survived the build)
-    home.file."${config.programs.pi-coding-agent.configDir}/docs".source =
-      "${config.programs.pi-coding-agent.package}/lib/node_modules/pi-monorepo/docs";
+    # Make sure the mirrored directories exist so the links never dangle.
+    home.activation.piDirs = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+      for d in extensions skills prompts themes; do
+        $DRY_RUN_CMD mkdir -p "${piDir}/$d"
+      done
+    '';
 
-    # Examples were stripped from the build, so take them from the package's own source
-    home.file."${config.programs.pi-coding-agent.configDir}/examples".source =
-      "${config.programs.pi-coding-agent.package.src}/packages/coding-agent/examples";
+    home.file = piLinks // {
+      # docs + examples linked from the installed pi package. They follow the
+      # package version, so a nixpkgs bump + rebuild updates them automatically.
+      # Docs come from the built package (they survived the build)
+      "${piDir}/docs".source =
+        "${config.programs.pi-coding-agent.package}/lib/node_modules/pi-monorepo/docs";
+
+      # Examples were stripped from the build, so take them from the package's own source
+      "${piDir}/examples".source =
+        "${config.programs.pi-coding-agent.package.src}/packages/coding-agent/examples";
+    };
   };
 }
