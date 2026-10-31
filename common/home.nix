@@ -97,6 +97,7 @@
       wiremix
       pkgs-stable.freecad
       usbutils
+      appimage-run
     ];
   
     nixCats = {
