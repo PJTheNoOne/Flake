@@ -98,6 +98,7 @@
       pkgs-stable.freecad
       usbutils
       appimage-run
+      (import ./fonts/protomolecule.nix { inherit pkgs; })
     ];
   
     nixCats = {

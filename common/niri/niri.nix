@@ -71,6 +71,10 @@
       enable = true;
       settings = {
         term = "xterm-256color";
+        font-family = "Protomolecule";
+        font-size = 12;
+        adjust-cell-width = "-6%";
+        font-style-bold = "wght=600";
       };
       enableBashIntegration = true;
       settings = {
