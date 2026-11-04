@@ -36,6 +36,7 @@
         ./common/game.nix
         ./common/dev.nix
         ./common/llm.nix
+        ./common/theme-switcher.nix
       ];
     };
     nixosConfigurations.commandblock = nixpkgs.lib.nixosSystem {
@@ -61,6 +62,7 @@
         ./common/dev.nix
         ./common/3d.nix
         ./common/llm.nix
+        ./common/theme-switcher.nix
       ];
     };
   };

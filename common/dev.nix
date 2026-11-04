@@ -26,6 +26,16 @@
     };
   };
 
+  programs.nix-ld.enable = true;
+
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    openssl
+    curl
+    glib
+  ];
+
   environment.systemPackages = [ pkgs.distrobox ];
 
   virtualisation.containers.enable = true;
@@ -62,6 +72,7 @@
     home.packages = with pkgs; [
       docker-compose
       distrobox
+      claude-code
     ];
     programs.vscode = {
       enable = true;
@@ -102,22 +113,6 @@
       #
       # shulker still runs Ollama and is not managed by this module, so Pi keeps
       # a hand-written entry for it.
-      models = {
-        providers = {
-          shulker = {
-            api = "openai-completions";
-            apiKey = "ollama";
-            baseUrl = "http://shulker.end-ulmer.ts.net:11435/v1";
-            models = [
-              { id = "gemma4:12b"; }
-              { id = "qwen3.5:0.8b"; }
-              { id = "qwen3.5:122b"; }
-              { id = "qwen3.8:latest"; }
-              { id = "fatgus:latest"; }
-            ];
-          };
-        };
-      };
     };
 
     # Make sure the mirrored directories exist so the links never dangle.

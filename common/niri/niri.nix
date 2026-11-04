@@ -51,7 +51,6 @@
       wireplumber
       playerctl
       brightnessctl
-      fuzzel
       #swaylock
       mako
 
@@ -67,6 +66,11 @@
       wl-clipboard
     ];
 
+    programs.fuzzel = {
+      enable = true;
+      settings.main.include = "/home/pj/.config/fuzzel/theme-switcher.ini";
+    };
+
     programs.ghostty = {
       enable = true;
       settings = {
@@ -75,6 +79,7 @@
         font-size = 12;
         adjust-cell-width = "-6%";
         font-style-bold = "wght=600";
+        config-file = "?/home/pj/.config/ghostty/theme-switcher.conf";
       };
       enableBashIntegration = true;
       settings = {

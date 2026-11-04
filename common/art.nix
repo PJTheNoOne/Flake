@@ -9,7 +9,6 @@
       mpv
       # davinci-resolve
       blender
-      onlyoffice-desktopeditors
       qgis
     ];
   };
