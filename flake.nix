@@ -60,7 +60,6 @@
         ./common/niri/waybar.nix
 	      ./common/art.nix
         ./common/dev.nix
-        ./common/3d.nix
         ./common/llm.nix
         ./common/theme-switcher.nix
       ];

@@ -108,6 +108,8 @@
       (import ./fonts/protomolecule.nix { inherit pkgs; })
       ripgrep
       chromium
+      orca-slicer
+
     ];
   
     nixCats = {
