@@ -1,4 +1,4 @@
-{ inputs, config, nixpkgs, pkgs, pkgs-stable, ... }: {
+{ inputs, config, lib, nixpkgs, pkgs, pkgs-stable, ... }: {
 
   services.displayManager.ly.enable = true;
   services.displayManager.ly.package = pkgs.ly;
@@ -29,6 +29,12 @@
   programs.niri = with nixpkgs; {
     enable = true;
   };
+
+  # NixOS gives user services a Nix-store TZDIR, which niri passes on to every
+  # app it launches. Flatpak only recognises /etc/localtime when it points
+  # inside $TZDIR, and /etc/localtime points into /etc/zoneinfo, so Flatpak
+  # apps fall back to UTC. Match the TZDIR set in /etc/set-environment.
+  systemd.user.services.niri.environment.TZDIR = lib.mkForce "/etc/zoneinfo";
 
   security.rtkit.enable = true;
   services.pipewire = {
