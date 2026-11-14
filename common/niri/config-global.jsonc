@@ -35,6 +35,7 @@
 
 // Battery {{{
 "battery": {
+	"justify": "center",
 	"states": {
 		"warning": 30,
 		"critical": 15
@@ -78,6 +79,7 @@
 
 // Clock {{{
 "clock": {
+	"justify": "center",
 	"format": "{:%H\n%M}",
 	"tooltip": true,
 	"tooltip-format": "<small>{calendar}</small>",
@@ -103,6 +105,7 @@
 
 // CPU {{{
 "cpu": {
+	"justify": "center",
 	"interval": 10,
         "format": "{usage}\n󰍛",
         "tooltip": true,
@@ -162,6 +165,7 @@
 
 // Memory {{{
 "memory": {
+	"justify": "center",
 	"interval": 10,
 
 	"format": "{percentage}\n{swapPercentage}\n󰧑",
@@ -300,6 +304,41 @@
 	"rotate": 90
 },
 
+"niri/workspaces": {
+	"format": "{value}\n{windows}",
+	"format-window-separator": "\n",
+	"window-rewrite-default": "",
+	"window-rewrite": {
+		// Browsers
+		"app_id<org.chromium.Chromium>": "󰊯",
+		"app_id<LibreWolf>": "󰈹",
+		"app_id<org.mozilla.firefox>": "",
+		"app_id<app.zen_browser.zen>": "󰈹",
+
+		// Terminal and CLI
+		"app_id<foot> title<nvim.*>": "",
+		"app_id<foot>": "",
+
+		// Dev
+		"app_id<code>": "󰨞",
+
+		// GUI misc
+		"app_id<org.gnome.Nautilus>": "",
+		"app_id<org.kde.okular>": "󰈦",
+		"app_id<org.pwmt.zathura>": "",
+		"app_id<orca-slicer>": "󰐫",
+
+		// Gaming
+		"app_id<com.heroicgameslauncher.hgl>": "󱢿",
+		"app_id<heroic>": "󱢿",
+		"app_id<steam>": "󰓓",
+
+		// Messaging
+		"app_id<org.signal.Signal>": "",
+		"app_id<discord>": "󰙯",
+	},
+},
+
 "sway/workspaces": {
 	"format": "{name}\n{windows}",
 	"disable-scroll": true,
@@ -400,6 +439,7 @@
 
 // Temperature {{{
 "temperature": { 
+	"justify": "center",
 	"thermal-zone": 5, // zone no. 5 is the closest to what btop shows me
 	"critical-threshold": 80,
 
