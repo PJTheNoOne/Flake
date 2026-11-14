@@ -36,7 +36,10 @@
     glib
   ];
 
-  environment.systemPackages = [ pkgs.distrobox ];
+  environment.systemPackages = [
+    pkgs.distrobox
+    (pkgs.callPackage ./fzv/fzv.nix { })  # rg + fzf search, opens in vi
+  ];
 
   virtualisation.containers.enable = true;
   virtualisation = {
