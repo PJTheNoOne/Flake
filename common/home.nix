@@ -29,6 +29,13 @@
     Defaults insults
   '';
 
+  hardware.keyboard.qmk.enable = true;
+  services.udev.packages = with pkgs; [
+    via
+    vial
+    qmk-udev-rules
+  ]; 
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -100,6 +107,7 @@
       appimage-run
       (import ./fonts/protomolecule.nix { inherit pkgs; })
       ripgrep
+      chromium
     ];
   
     nixCats = {
